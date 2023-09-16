@@ -7,14 +7,14 @@ import notificationImage from "../notification.png";
 import { FaUser, FaLock, FaEnvelope, FaCalendar } from "react-icons/fa";
 function RegistrationForm() {
   const [formData, setFormData] = useState({
-    username: "",
+    userName: "",
     password: "",
     email: "",
     dob: "",
   });
 
   const [errors, setErrors] = useState({
-    username: "",
+    userName: "",
     password: "",
     email: "",
     dob: "",
@@ -40,9 +40,9 @@ function RegistrationForm() {
     // Validation rules can be added here
     let error = "";
 
-    if (name === "username") {
+    if (name === "userName") {
       error =
-        value.length < 5 ? "Username must be at least 5 characters long" : "";
+        value.length < 5 ? "userName must be at least 5 characters long" : "";
     } else if (name === "password") {
       error =
         value.length < 8 ? "Password must be at least 8 characters long" : "";
@@ -53,19 +53,11 @@ function RegistrationForm() {
     } else if (name === "dob") {
       let currDate = new Date();
       let selectedDate = new Date(value);
-      console.log(
-        selectedDate.getDate(),
-        selectedDate.getFullYear(),
-        selectedDate.getMonth()
-      );
-
       if (validateAge(currDate, selectedDate)) {
         error = "";
       } else {
         error = "please select a date in past";
       }
-      console.log(error);
-      //document.getElementById("doberror").innerHTML = error;
     }
 
     setErrors({ ...errors, [name]: error });
@@ -75,7 +67,7 @@ function RegistrationForm() {
 
   const formValidate = () => {
     if (
-      errors.username == "" &&
+      errors.userName == "" &&
       errors.password == "" &&
       errors.email == "" &&
       errors.dob == ""
@@ -101,8 +93,9 @@ function RegistrationForm() {
         })
         .catch((err) => {
           console.log(err);
+          let error = err.response.data;
           //const error = err.response.data;
-          // setErrors({ ...errors, ["username"]: error });
+          setErrors({ ...errors, ["email"]: error });
         });
     }
   };
@@ -129,21 +122,21 @@ function RegistrationForm() {
         <h3 className="signup">Sign Up</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">
+            <label htmlFor="userName" className="form-label">
               <FaUser />
-              <span>Username</span>
+              <span>userName</span>
             </label>
             <input
               type="text"
-              className={`form-control ${errors.username ? "is-invalid" : ""}`}
-              id="username"
-              name="username"
-              value={formData.username}
+              className={`form-control ${errors.userName ? "is-invalid" : ""}`}
+              id="userName"
+              name="userName"
+              value={formData.userName}
               onChange={handleChange}
               required
             />
-            {errors.username && (
-              <div className="invalid-feedback">{errors.username}</div>
+            {errors.userName && (
+              <div className="invalid-feedback">{errors.userName}</div>
             )}
           </div>
 
