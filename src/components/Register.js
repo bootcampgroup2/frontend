@@ -20,6 +20,15 @@ function RegistrationForm() {
     dob: "",
   });
 
+  function validatePassword(password) {
+    // Define a regular expression pattern to match the criteria
+    const pattern =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+
+    // Use the test() method to check if the password matches the pattern
+    return pattern.test(password);
+  }
+
   function validateAge(currentDate, birthdate) {
     // Calculate the age difference in milliseconds
     const ageDifference = currentDate - birthdate;
@@ -44,8 +53,12 @@ function RegistrationForm() {
       error =
         value.length < 5 ? "userName must be at least 5 characters long" : "";
     } else if (name === "password") {
-      error =
-        value.length < 8 ? "Password must be at least 8 characters long" : "";
+      if (validatePassword(value)) {
+        error = "";
+      } else {
+        error =
+          "Password should be minimum 8 character and contain atleast 1 uppercase,1 lowercase,1 digit, 1 special character";
+      }
     } else if (name === "email") {
       error = !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
         ? "Email is not valid"

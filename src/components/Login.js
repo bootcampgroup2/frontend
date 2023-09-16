@@ -15,6 +15,14 @@ const LoginForm = () => {
     password: "",
   });
 
+  function validatePassword(password) {
+    // Define a regular expression pattern to match the criteria
+    const pattern =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+
+    // Use the test() method to check if the password matches the pattern
+    return pattern.test(password);
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -29,8 +37,13 @@ const LoginForm = () => {
             : "";
         break;
       case "password":
-        newErrors.password =
-          value.length < 8 ? "Password must be at least 8 characters long" : "";
+        let error;
+        if (validatePassword(value)) {
+          error = "";
+        } else {
+          error =
+            "Password should be minimum 8 character and contain atleast 1 uppercase,1 lowercase,1 digit, 1 special character";
+        }
         break;
       default:
         break;
