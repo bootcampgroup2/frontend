@@ -4,33 +4,42 @@ import axios from "axios";
 import "../styling/Register.css";
 import emailImage from "../email.jpg";
 import notificationImage from "../notification.png";
-import {
-  FaUser,
-  FaLock,
-  FaEnvelope,
-  FaAddressCard,
-  FaMobile,
-} from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope, FaCalendar } from "react-icons/fa";
 function RegistrationForm() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     email: "",
-    address: "",
-    mobile: "",
+    dob: "",
   });
 
   const [errors, setErrors] = useState({
     username: "",
     password: "",
     email: "",
-    mobile: "",
+    dob: "",
   });
+
+  function validateAge(currentDate, birthdate) {
+    // Calculate the age difference in milliseconds
+    const ageDifference = currentDate - birthdate;
+
+    // Convert age difference to years
+    const ageInYears = ageDifference / (1000 * 60 * 60 * 24 * 365.25);
+
+    // Check if the age is at least 18
+    if (ageInYears >= 18) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     // Validation rules can be added here
     let error = "";
+
     if (name === "username") {
       error =
         value.length < 5 ? "Username must be at least 5 characters long" : "";
@@ -41,12 +50,27 @@ function RegistrationForm() {
       error = !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
         ? "Email is not valid"
         : "";
-    } else if (name === "mobile") {
-      error = !/^\d{10}$/.test(value) ? "Mobile number is not valid" : "";
+    } else if (name === "dob") {
+      let currDate = new Date();
+      let selectedDate = new Date(value);
+      console.log(
+        selectedDate.getDate(),
+        selectedDate.getFullYear(),
+        selectedDate.getMonth()
+      );
+
+      if (validateAge(currDate, selectedDate)) {
+        error = "";
+      } else {
+        error = "please select a date in past";
+      }
+      console.log(error);
+      //document.getElementById("doberror").innerHTML = error;
     }
 
     setErrors({ ...errors, [name]: error });
     setFormData({ ...formData, [name]: value });
+    console.log(errors);
   };
 
   const formValidate = () => {
@@ -54,32 +78,31 @@ function RegistrationForm() {
       errors.username == "" &&
       errors.password == "" &&
       errors.email == "" &&
-      errors.mobile == ""
+      errors.dob == ""
     ) {
+      console.log(errors);
       return true;
     }
+    console.log(errors);
     return false;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add form submission logic here
+    let currdate = new Date();
+    let givendate = new Date(formData.dob);
+    console.log(currdate, " ", givendate);
     if (formValidate()) {
-      const data = {
-        userName: formData.username,
-        password: formData.password,
-        email: formData.email,
-        address: formData.address,
-        mobile: formData.mobile,
-      };
       axios
-        .post("http://localhost:8080/adduser", data)
+        .post("http://localhost:8080/adduser", formData)
         .then((result) => {
-          window.location = "/login";
+          window.location = "/";
         })
         .catch((err) => {
-          const error = err.response.data;
-          setErrors({ ...errors, ["username"]: error });
+          console.log(err);
+          //const error = err.response.data;
+          // setErrors({ ...errors, ["username"]: error });
         });
     }
   };
@@ -163,37 +186,20 @@ function RegistrationForm() {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="address" className="form-label">
-              <FaAddressCard />
-              <span>Address</span>
-            </label>
-            <textarea
-              className="form-control"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="mobile" className="form-label">
-              <FaMobile />
-              <span>Mobile</span>
+            <label htmlFor="dob" className="form-label">
+              <FaCalendar />
+              <span>DOB</span>
             </label>
             <input
-              type="text"
-              className={`form-control ${errors.mobile ? "is-invalid" : ""}`}
-              id="mobile"
-              name="mobile"
-              value={formData.mobile}
+              type="date"
+              className={`form-control ${errors.dob ? "is-invalid" : ""}`}
+              id="dob"
+              name="dob"
+              value={formData.dob}
               onChange={handleChange}
               required
             />
-            {errors.mobile && (
-              <div className="invalid-feedback">{errors.mobile}</div>
-            )}
+            {errors.dob && <div className="invalid-feedback">{errors.dob}</div>}
           </div>
 
           <div className="text-center">
@@ -203,7 +209,7 @@ function RegistrationForm() {
           </div>
           <div className="text-center">
             Already have an account?
-            <a className="link" href="/login">
+            <a className="link" href="/">
               Sign In
             </a>
           </div>

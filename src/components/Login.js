@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import "../styling/Register.css";
 import notificationImage from "../notification.png";
 import emailImage from "../email.jpg";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import axios from "axios";
 const LoginForm = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
   const [errors, setErrors] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -21,9 +22,11 @@ const LoginForm = () => {
     // Validation
     let newErrors = { ...errors };
     switch (name) {
-      case "username":
-        newErrors.username =
-          value.length < 5 ? "Username must be at least 5 characters long" : "";
+      case "email":
+        newErrors.email =
+          !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
+            ? "Email is not valid"
+            : "";
         break;
       case "password":
         newErrors.password =
@@ -39,9 +42,19 @@ const LoginForm = () => {
     e.preventDefault();
 
     // Check for errors
-    if (errors.username || errors.password) {
+    if (errors.email || errors.password) {
       alert("Please fix the form errors before submitting.");
       return;
+    } else {
+      axios
+        .post("http://localhost:8001/login", formData)
+        .then((result) => {
+          document.cookie = `token = ${result.data}`;
+          window.location = "/home";
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     // Perform login logic here
@@ -72,20 +85,20 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="username" className="form-label">
-              <FaUser />
-              <span>Username</span>
+              <FaEnvelope />
+              <span>Email</span>
             </label>
             <input
               type="text"
-              className={`form-control ${errors.username ? "is-invalid" : ""}`}
-              id="username"
-              name="username"
-              value={formData.username}
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
             />
             {errors.username && (
-              <div className="invalid-feedback">{errors.username}</div>
+              <div className="invalid-feedback">{errors.email}</div>
             )}
           </div>
           <div className="mb-3">
@@ -106,12 +119,12 @@ const LoginForm = () => {
               <div className="invalid-feedback">{errors.password}</div>
             )}
           </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary">
               Sign In
             </button>
           </div>
-          <div class="text-center">
+          <div className="text-center">
             Don't have an account ?
             <a className="link" href="/register">
               Create one
