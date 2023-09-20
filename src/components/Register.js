@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "../styling/Register.css";
-import emailImage from "../email.jpg";
-import notificationImage from "../notification.png";
+import emailImage from "../images/email.jpg";
+import notificationImage from "../images/notification.png";
 import { FaUser, FaLock, FaEnvelope, FaCalendar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 function RegistrationForm() {
   const [formData, setFormData] = useState({
     userName: "",
     password: "",
     email: "",
-    dob: "",
+    dOB: "",
   });
-
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({
     userName: "",
     password: "",
     email: "",
-    dob: "",
+    dOB: "",
   });
 
   function validatePassword(password) {
@@ -63,7 +64,7 @@ function RegistrationForm() {
       error = !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
         ? "Email is not valid"
         : "";
-    } else if (name === "dob") {
+    } else if (name === "dOB") {
       let currDate = new Date();
       let selectedDate = new Date(value);
       if (validateAge(currDate, selectedDate)) {
@@ -83,7 +84,7 @@ function RegistrationForm() {
       errors.userName == "" &&
       errors.password == "" &&
       errors.email == "" &&
-      errors.dob == ""
+      errors.dOB == ""
     ) {
       console.log(errors);
       return true;
@@ -96,13 +97,13 @@ function RegistrationForm() {
     e.preventDefault();
     // Add form submission logic here
     let currdate = new Date();
-    let givendate = new Date(formData.dob);
+    let givendate = new Date(formData.dOB);
     console.log(currdate, " ", givendate);
     if (formValidate()) {
       axios
-        .post("http://localhost:8080/adduser", formData)
+        .post("http://localhost:8082/user/adduser", formData)
         .then((result) => {
-          window.location = "/";
+          navigate("/");
         })
         .catch((err) => {
           console.log(err);
@@ -192,20 +193,20 @@ function RegistrationForm() {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="dob" className="form-label">
+            <label htmlFor="dOB" className="form-label">
               <FaCalendar />
-              <span>DOB</span>
+              <span>dOB</span>
             </label>
             <input
               type="date"
-              className={`form-control ${errors.dob ? "is-invalid" : ""}`}
-              id="dob"
-              name="dob"
-              value={formData.dob}
+              className={`form-control ${errors.dOB ? "is-invalid" : ""}`}
+              id="dOB"
+              name="dOB"
+              value={formData.dOB}
               onChange={handleChange}
               required
             />
-            {errors.dob && <div className="invalid-feedback">{errors.dob}</div>}
+            {errors.dOB && <div className="invalid-feedback">{errors.dOB}</div>}
           </div>
 
           <div className="text-center">

@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import "../styling/Register.css";
-import notificationImage from "../notification.png";
-import emailImage from "../email.jpg";
+import notificationImage from "../images/notification.png";
+import emailImage from "../images/email.jpg";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
     email: "",
@@ -60,10 +63,11 @@ const LoginForm = () => {
       return;
     } else {
       axios
-        .post("http://localhost:8001/login", formData)
+        .post("http://localhost:8081/auth/login", formData)
         .then((result) => {
           document.cookie = `token = ${result.data}`;
-          window.location = "/home";
+          navigate("/products");
+          localStorage.setItem("token", result.data);
         })
         .catch((err) => {
           console.log(err);

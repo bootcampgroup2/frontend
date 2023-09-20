@@ -1,0 +1,44 @@
+.srch {
+  width: 60%;
+  margin: auto;
+}
+.srch input {
+  width: 100%;
+  height: 45px;
+  margin: 0 auto;
+  display: block;
+  border-radius: 20px;
+  padding: 0 10px;
+  font-size: large;
+}
+.srch input:focus {
+  border: 4px solid rgb(51, 149, 181);
+  outline: none;
+}
+.messages {
+  width: 60%;
+  margin: auto;
+  height: auto;
+  align-items: center;
+}
+.message {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  transition: 0.5s;
+  margin: 5px 0px;
+  border-radius: 30px;
+  background-color: lightcyan;
+}
+.message:hover {
+  box-shadow: 5px 5px 10px #888888;
+}
+
+@media screen and (width < 500px) {
+  .messages {
+    width: 300px;
+  }
+  .srch {
+    width: 300px;
+  }
+}
