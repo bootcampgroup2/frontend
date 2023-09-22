@@ -101,7 +101,7 @@ function RegistrationForm() {
     console.log(currdate, " ", givendate);
     if (formValidate()) {
       axios
-        .post("http://localhost:8082/user/adduser", formData)
+        .post("http://localhost:8080/user/adduser", formData)
         .then((result) => {
           navigate("/");
         })

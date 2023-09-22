@@ -29,6 +29,10 @@
   height: 200px;
 }
 
+.dropdown {
+  margin-right: 20px;
+}
+
 .price {
   font-weight: bold;
   color: #333;

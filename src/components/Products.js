@@ -14,9 +14,10 @@ import refrigerator from "../images/refrigerator.jpg";
 import studychair from "../images/studychair.jpg";
 import axios from "axios";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 const Products = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const navigator = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("token")) {
       setLoggedIn(true);
@@ -78,7 +79,12 @@ const Products = () => {
   ];
 
   const placeOrder = (item) => {
-    console.log(item);
+    axios
+      .post("http://localhost:8083/api/v1/orders", item)
+      .then((result, err) => {
+        alert(result.data);
+        navigator("/inbox");
+      });
   };
   return (
     <div>

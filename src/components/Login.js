@@ -20,6 +20,7 @@ const LoginForm = () => {
 
   function validatePassword(password) {
     // Define a regular expression pattern to match the criteria
+
     const pattern =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
@@ -44,13 +45,16 @@ const LoginForm = () => {
         if (validatePassword(value)) {
           error = "";
         } else {
+          console.log(value);
           error =
             "Password should be minimum 8 character and contain atleast 1 uppercase,1 lowercase,1 digit, 1 special character";
         }
+        newErrors.password = error;
         break;
       default:
         break;
     }
+
     setErrors(newErrors);
   };
 
@@ -63,11 +67,10 @@ const LoginForm = () => {
       return;
     } else {
       axios
-        .post("http://localhost:8081/auth/login", formData)
+        .post("http://localhost:8080/auth/login", formData)
         .then((result) => {
-          document.cookie = `token = ${result.data}`;
-          navigate("/products");
           localStorage.setItem("token", result.data);
+          navigate("/products");
         })
         .catch((err) => {
           console.log(err);
@@ -114,7 +117,7 @@ const LoginForm = () => {
               onChange={handleChange}
               required
             />
-            {errors.username && (
+            {errors.email && (
               <div className="invalid-feedback">{errors.email}</div>
             )}
           </div>
