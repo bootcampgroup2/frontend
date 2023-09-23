@@ -51,24 +51,32 @@ import NotificationIcon from "../images/notification.png";
 
 // export default Navbar;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styling/Navbar.css";
 import "font-awesome/css/font-awesome.min.css";
 import { FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 const Navbar = () => {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(
+    Boolean(localStorage.getItem("notification"))
+  );
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   console.log(token);
   const handleToggle = () => {
-    setToggle(!toggle);
     const config = {
       headers: {
         AUTHORIZATION: `Bearer ${token}`,
       },
     };
+    if (toggle) {
+      localStorage.setItem("notification", "");
+    } else {
+      localStorage.setItem("notification", !toggle);
+    }
+
+    console.log(Boolean(localStorage.getItem("notification")));
     axios
       .put("http://localhost:8080/user/updateuser", {}, config)
       .then((result) => {
@@ -77,10 +85,16 @@ const Navbar = () => {
           : alert("You will receive notifications");
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        alert(err.response.data.message);
+        // console.log(err.response.data.message);
+        // alert(err.response.data.message);
       });
+    setToggle(!toggle);
   };
+
+  // useEffect(() => {
+  //   console.log(typeof Boolean(localStorage.getItem("notification")));
+  //   setToggle(Boolean(localStorage.getItem("notification")));
+  // }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -111,12 +125,12 @@ const Navbar = () => {
       </div>
       {/* <div className="navbar-center"></div> */}
       <div className="navbar-right">
-        <a href="/products" className="nav-item">
+        <Link to="/products" className="nav-item">
           Products
-        </a>
-        <a href="/inbox" className="nav-item">
+        </Link>
+        <Link to="/inbox" className="nav-item">
           Inbox
-        </a>
+        </Link>
         {/* <div className="notification-icon">
           <i className="fa fa-bell"></i>
         </div> */}

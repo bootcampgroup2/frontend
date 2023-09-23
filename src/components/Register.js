@@ -5,7 +5,7 @@ import "../styling/Register.css";
 import emailImage from "../images/email.jpg";
 import notificationImage from "../images/notification.png";
 import { FaUser, FaLock, FaEnvelope, FaCalendar } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function RegistrationForm() {
   const [formData, setFormData] = useState({
     userName: "",
@@ -216,9 +216,9 @@ function RegistrationForm() {
           </div>
           <div className="text-center">
             Already have an account?
-            <a className="link" href="/">
+            <Link className="link" to="/">
               Sign In
-            </a>
+            </Link>
           </div>
         </form>
       </div>

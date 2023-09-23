@@ -3,7 +3,7 @@ import "../styling/Register.css";
 import notificationImage from "../images/notification.png";
 import emailImage from "../images/email.jpg";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -70,6 +70,7 @@ const LoginForm = () => {
         .post("http://localhost:8080/auth/login", formData)
         .then((result) => {
           localStorage.setItem("token", result.data);
+          localStorage.setItem("notification", true);
           navigate("/products");
         })
         .catch((err) => {
@@ -146,9 +147,9 @@ const LoginForm = () => {
           </div>
           <div className="text-center">
             Don't have an account ?
-            <a className="link" href="/register">
+            <Link className="link" to="/register">
               Create one
-            </a>
+            </Link>
           </div>
         </form>
       </div>

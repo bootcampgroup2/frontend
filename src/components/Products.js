@@ -23,6 +23,8 @@ const Products = () => {
       setLoggedIn(true);
     }
   }, [loggedIn]);
+
+  const token = localStorage.getItem("token");
   // Sample array of products (you can replace this with your data)
   const products = [
     {
@@ -79,8 +81,13 @@ const Products = () => {
   ];
 
   const placeOrder = (item) => {
+    const config = {
+      headers: {
+        AUTHORIZATION: `Bearer ${token}`,
+      },
+    };
     axios
-      .post("http://localhost:8083/api/v1/orders", item)
+      .post("http://localhost:8080/orders/placeorder", item, config)
       .then((result, err) => {
         alert(result.data);
         navigator("/inbox");
