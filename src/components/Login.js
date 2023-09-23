@@ -10,7 +10,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
-
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
@@ -30,7 +30,7 @@ const LoginForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
+    setError("");
     // Validation
     let newErrors = { ...errors };
     switch (name) {
@@ -75,6 +75,7 @@ const LoginForm = () => {
         })
         .catch((err) => {
           console.log(err);
+          setError(err.response.data);
         });
     }
 
@@ -140,6 +141,9 @@ const LoginForm = () => {
               <div className="invalid-feedback">{errors.password}</div>
             )}
           </div>
+          <p style={{ textAlign: "center", color: "red", fontWeight: "bold" }}>
+            {error}
+          </p>
           <div className="text-center">
             <button type="submit" className="btn btn-primary">
               Sign In

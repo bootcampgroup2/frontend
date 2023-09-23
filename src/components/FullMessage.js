@@ -30,13 +30,20 @@ export default function FullMessage(props) {
               <p>Order Id : {props.data.message.orderId}</p>
               <p>Item : {props.data.message.itemName}</p>
               <p>Quantity : {props.data.message.quantity}</p>
-              <p>Total Price : {props.data.message.price}</p>
+              <p>Total Price : ${props.data.message.price}</p>
             </div>
           </div>
         </div>
+      ) : props.data.message.event == "Registration" ? (
+        <div style={{ backgroundColor: "lightgreen", display: "inline-block" }}>
+          <h1 style={{ color: "blue" }}>Welcome to e-Mail Notify</h1>
+          <h4>Thanks for signing up with e-Mail Notify</h4>
+          <p>{props.data.message.message}</p>
+        </div>
       ) : (
         <div>
-          <h1></h1>
+          <h1 style={{ color: "blue" }}>Promotion</h1>
+          <h6>{props.data.message.message}</h6>
         </div>
       )}
       <p style={{ textAlign: "right" }}>

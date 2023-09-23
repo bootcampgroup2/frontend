@@ -8,6 +8,7 @@ function Inbox() {
   const [messages, setMessages] = useState([]);
   const [search, setSearch] = useState("");
   const [loggedIn, setLoggedIn] = useState();
+  const [read, setRead] = useState([]);
   const [viewFullMessage, setViewFullMessage] = useState([]);
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -25,25 +26,22 @@ function Inbox() {
           // for (let r of result.data) {
           //   console.log(r);
           // }
-          const initialValue = new Array(result.data.length).fill(false);
-          setViewFullMessage(initialValue);
           console.log(result.data);
+          const len = result.data.length;
+          const initialValueOfViewFullMessages = new Array(len).fill(false);
+          const initialValueOfRead = new Array(len).fill("Unread");
+          setRead(initialValueOfRead);
+          setViewFullMessage(initialValueOfViewFullMessages);
           const resultData = result.data;
           resultData.reverse();
           setMessages(resultData);
-          localStorage.setItem("messages", JSON.stringify(resultData));
-          // var data = JSON.stringify(result.data[40].message);
-          // var data1 = console.log(JSON.parse(data));
-          // console.log(data1.email);
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }, [loggedIn]);
-
   const viewFullMessageHandler = (index) => {
-    console.log(messages[index].read);
     if (messages[index].read == false) {
       const config = {
         headers: {
@@ -61,6 +59,12 @@ function Inbox() {
         });
     }
 
+    if (read[index] == "Unread") {
+      const changedRead = [...read];
+      changedRead[index] = "read";
+      setRead(changedRead);
+    }
+
     const changeViewFullMessage = [...viewFullMessage];
     changeViewFullMessage[index] = !changeViewFullMessage[index];
 
@@ -76,20 +80,34 @@ function Inbox() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by priority or category"
+              placeholder="Search by priority, category, order"
             />
           </div>
           <div className="messages">
             {messages
-              .filter(
-                (ele) =>
-                  ele.priority.includes(search) ||
-                  ele.message.event.includes(search)
+              .filter((ele) =>
+                ele.message.event == "Order"
+                  ? ele.message.itemName
+                      .toLowerCase()
+                      .includes(search.toLowerCase()) ||
+                    ele.priority.toLowerCase().includes(search.toLowerCase()) ||
+                    ele.message.event
+                      .toLowerCase()
+                      .includes(search.toLowerCase())
+                  : ele.priority.toLowerCase().includes(search.toLowerCase()) ||
+                    ele.message.event
+                      .toLowerCase()
+                      .includes(search.toLowerCase())
               )
               .map((element, index) => {
                 return (
                   <div
-                    className="message"
+                    className={
+                      element.read || read[index] == "read"
+                        ? "message"
+                        : "highlight"
+                    }
+                    key={index}
                     onClick={() => viewFullMessageHandler(index)}
                   >
                     {viewFullMessage[index] ? (
@@ -113,6 +131,16 @@ function Inbox() {
                         </span>
                         <p>Click here to see the mail content...</p>
                         <p style={{ textAlign: "right" }}>
+                          <span
+                            style={{
+                              marginRight: "5px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {element.read == true || read[index] == "read"
+                              ? "Read"
+                              : "Unread"}
+                          </span>
                           {element.message.dateAndTime.substring(0, 10)},
                           {element.message.dateAndTime.substring(10, 19)}
                         </p>

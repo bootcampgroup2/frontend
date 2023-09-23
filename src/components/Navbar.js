@@ -63,7 +63,6 @@ const Navbar = () => {
   );
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  console.log(token);
   const handleToggle = () => {
     const config = {
       headers: {
@@ -76,7 +75,6 @@ const Navbar = () => {
       localStorage.setItem("notification", !toggle);
     }
 
-    console.log(Boolean(localStorage.getItem("notification")));
     axios
       .put("http://localhost:8080/user/updateuser", {}, config)
       .then((result) => {

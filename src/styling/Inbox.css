@@ -22,6 +22,18 @@
   overflow: auto;
   align-items: center;
 }
+.highlight {
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  transition: 0.5s;
+  margin: 5px 0px;
+  border-radius: 30px;
+  background: linear-gradient(to right, lightgray, white);
+  cursor: pointer;
+  color: blue;
+  font-weight: bold;
+}
 .message {
   width: 100%;
   padding: 8px;
